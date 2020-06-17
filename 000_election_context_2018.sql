@@ -1,0 +1,46 @@
+#standardSQL
+-- Replace the MIT election context fields that contain "NA" with null, and
+-- cast numbers in those fields to their correct types.
+create or replace view public.election_context_2018 as
+select
+    state,
+    county,
+    fips,
+    trump16,
+    clinton16,
+    otherpres16,
+    romney12,
+    obama12,
+    otherpres12,
+    IF(election.demsen16 = "NA", null, CAST(election.demsen16 as int64)) as demsen16,
+    IF(election.repsen16 = "NA", null, CAST(election.repsen16 as int64)) as repsen16,
+    IF(election.othersen16 = "NA", null, CAST(election.othersen16 as int64)) as othersen16,
+    IF(election.demhouse16 = "NA", null, CAST(election.demhouse16 as int64)) as demhouse16,
+    IF(election.rephouse16 = "NA", null, CAST(election.rephouse16 as int64)) as rephouse16,
+    IF(election.otherhouse16 = "NA", null, CAST(election.otherhouse16 as int64)) as otherhouse16,
+    IF(election.demgov16 = "NA", null, CAST(election.demgov16 as int64)) as demgov16,
+    IF(election.repgov16 = "NA", null, CAST(election.repgov16 as int64)) as repgov16,
+    IF(election.othergov16 = "NA", null, CAST(election.othergov16 as int64)) as othergov16,
+    IF(election.repgov14 = "NA", null, CAST(election.repgov14 as int64)) as repgov14,
+    IF(election.demgov14 = "NA", null, CAST(election.demgov14 as int64)) as demgov14,
+    IF(election.othergov14 = "NA", null, CAST(election.othergov14 as int64)) as othergov14,
+    IF(election.total_population = "NA", null, CAST(election.total_population as int64)) as total_population,
+    IF(election.cvap = "NA", null, CAST(election.cvap as int64)) as cvap,
+    -- Take the average of the percentages weighted by the portion of the population estimated to be in KC
+    IF(election.white_pct = "NA", null, CAST(election.white_pct as float64)) as white_pct,
+    IF(election.black_pct = "NA", null, CAST(election.black_pct as float64)) as black_pct,
+    IF(election.hispanic_pct = "NA", null, CAST(election.hispanic_pct as float64)) as hispanic_pct,
+    IF(election.nonwhite_pct = "NA", null, CAST(election.nonwhite_pct as float64)) as nonwhite_pct,
+    IF(election.foreignborn_pct = "NA", null, CAST(election.foreignborn_pct as float64)) as foreignborn_pct,
+    IF(election.female_pct = "NA", null, CAST(election.female_pct as float64)) as female_pct,
+    IF(election.age29andunder_pct = "NA", null, CAST(election.age29andunder_pct as float64)) as age29andunder_pct,
+    IF(election.age65andolder_pct = "NA", null, CAST(election.age65andolder_pct as float64)) as age65andolder_pct,
+    IF(election.median_hh_inc = "NA", null, CAST(election.median_hh_inc as float64)) as median_hh_inc,
+    IF(election.clf_unemploy_pct = "NA", null, CAST(election.clf_unemploy_pct as float64)) as clf_unemploy_pct,
+    IF(election.lesshs_pct = "NA", null, CAST(election.lesshs_pct as float64)) as lesshs_pct,
+    IF(election.lesscollege_pct = "NA", null, CAST(election.lesscollege_pct as float64)) as lesscollege_pct,
+    IF(election.lesshs_whites_pct = "NA", null, CAST(election.lesshs_whites_pct as float64)) as lesshs_whites_pct,
+    IF(election.lesscollege_whites_pct = "NA", null, CAST(election.lesscollege_whites_pct as float64)) as lesscollege_whites_pct,
+    IF(election.rural_pct = "NA", null, CAST(election.rural_pct as float64)) as rural_pct,
+    election.ruralurban_cc as ruralurban_cc
+from `covid-project-275201`.public.mit_election_context_2018 election;
